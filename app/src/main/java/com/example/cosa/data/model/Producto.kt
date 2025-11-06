@@ -1,6 +1,8 @@
 package com.example.cosa.data.model
 
 import com.example.cosa.data.Enum.CategoriaENUM
+import java.text.NumberFormat
+import java.util.Locale
 
 data class Producto(
     val id: String,
@@ -17,6 +19,10 @@ data class Producto(
     val disponible:Boolean
         get() = stock > 0
 
-    val precioFormateado
-        get() = "$%.2f".format(precio)
+    val precioFormateado: String
+        get() {
+            val formatoChileno = NumberFormat.getNumberInstance(Locale("es", "CL"))
+            formatoChileno.maximumFractionDigits = 0
+            return "$${formatoChileno.format(precio)}"
+        }
 }

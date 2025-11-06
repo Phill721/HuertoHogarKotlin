@@ -22,6 +22,8 @@ import com.example.cosa.R
 import com.example.cosa.data.model.Producto
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 
 
 @Composable
@@ -58,7 +60,7 @@ fun HomeScreen(
                     ProductosMasCompradosTitle()
                 }
 
-                items(productos) { producto ->
+                items(productos.take(3)) { producto ->
                     ProductoCard(producto)
                 }
 
@@ -103,35 +105,68 @@ fun HomeTopBar(onLoginClick: () -> Unit, onProductosClick: () -> Unit) {
 
 @Composable
 fun HeroSection(onProductosClick: () -> Unit) {
+    val context = LocalContext.current
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color(0xFF2E8B57))
             .padding(16.dp)
     ) {
-        Column {
-            Text(
-                "Desde nuestro Huerto Hogar para ti",
-                color = Color.White,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                "HuertoHogar es una tienda online dedicada a llevar la frescura y calidad del campo a tu hogar en Chile.",
-                color = Color.White,
-                fontSize = 14.sp
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Button(
-                onClick = onProductosClick,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // 📜 Columna con texto
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 12.dp)
             ) {
-                Text("Ver productos", color = Color(0xFF2E8B57))
+                Text(
+                    "Desde nuestro Huerto Hogar para ti",
+                    color = Color.White,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    "HuertoHogar es una tienda online dedicada a llevar la frescura y calidad de los productos del campo directamente a la puerta de nuestros clientes en Chile. Con más de 6 años de experiencia, operamos en más de 9 puntos del país, incluyendo Santiago, Puerto Montt, Villarica, Nacimiento, Viña del Mar, Valparaíso y Concepción. Promovemos un estilo de vida saludable y sostenible.",
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Button(
+                    onClick = onProductosClick,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+                ) {
+                    Text("Ver productos", color = Color(0xFF2E8B57))
+                }
             }
+
+            // 🖼️ Imagen del banner
+            Image(
+                painter = painterResource(
+                    id = context.resources.getIdentifier(
+                        "banner1", // nombre del archivo sin extensión
+                        "drawable",
+                        context.packageName
+                    )
+                ),
+                contentDescription = "Huerto Hogar",
+                modifier = Modifier
+                    .weight(1f)
+                    .height(200.dp)
+                    .clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop
+            )
         }
     }
 }
+
 
 @Composable
 fun ProductosMasCompradosTitle() {
@@ -152,6 +187,7 @@ fun ProductosMasCompradosTitle() {
 
 @Composable
 fun ProductoCard(producto: Producto) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -163,7 +199,11 @@ fun ProductoCard(producto: Producto) {
             modifier = Modifier.padding(12.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.fruit1), // temporal hasta tener imágenes reales
+                painter = painterResource(id = context.resources.getIdentifier(
+                    producto.imagen1,
+                    "drawable",
+                    context.packageName
+                )), //
                 contentDescription = producto.nombre,
                 modifier = Modifier
                     .fillMaxWidth()
