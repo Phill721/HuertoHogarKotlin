@@ -37,4 +37,16 @@ class ProductoViewModel(
             _isLoading.value = false
         }
     }
+
+    fun filtrarPorCategoria(categoria: com.example.cosa.data.Enum.CategoriaENUM?) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _productos.value = if (categoria == null) {
+                repository.obtenerProductos()
+            } else {
+                repository.buscarCategoria(categoria)
+            }
+            _isLoading.value = false
+        }
+    }
 }

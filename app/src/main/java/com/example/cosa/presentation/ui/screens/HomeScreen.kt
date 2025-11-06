@@ -10,97 +10,72 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.cosa.presentation.viewmodel.ProductoViewModel
+import androidx.navigation.NavController
 import com.example.cosa.R
-import com.example.cosa.data.model.Producto
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
-
+import com.example.cosa.presentation.ui.Components.HuertoNavbar
+import com.example.cosa.presentation.ui.Components.ProductoCard
+import com.example.cosa.presentation.viewmodel.ProductoViewModel
 
 @Composable
-fun HomeScreen(
-    viewModel: ProductoViewModel = viewModel(),
-    onNavigateToProductos: () -> Unit = {},
-    onNavigateToLogin: () -> Unit = {}
-) {
-    val productos by viewModel.productos.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+fun HomeScreen(navController: NavController) {
+    val viewModel: ProductoViewModel = viewModel()
+    val productos by viewModel.productos.collectAsState(initial = emptyList())
+    val isLoading by viewModel.isLoading.collectAsState(initial = true)
 
-    Scaffold(
-        topBar = { HomeTopBar(onNavigateToLogin, onNavigateToProductos) },
-        containerColor = Color(0xFFF5F5F5)
-    ) { padding ->
-        if (isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = Color(0xFF2E8B57))
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize()
-            ) {
-                item {
-                    HeroSection(onNavigateToProductos)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    ProductosMasCompradosTitle()
+    HuertoNavbar(navController = navController) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF5F5F5))
+                .padding(innerPadding)
+        ) {
+            if (isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Color(0xFF2E8B57))
                 }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White),
+                    verticalArrangement = Arrangement.spacedBy(0.dp), // sin espacios entre secciones
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    item {
+                        HeroSection(onProductosClick = { navController.navigate("productos") })
+                        ProductosMasCompradosTitle()
+                    }
 
-                items(productos.take(3)) { producto ->
-                    ProductoCard(producto)
-                }
+                    items(productos.take(3)) { producto ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.White)
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                        ) {
+                            ProductoCard(producto = producto)
+                        }
+                    }
 
-                item {
-                    FooterSection()
+                    item {
+                        FooterSection()
+                    }
                 }
             }
         }
     }
-}
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-fun HomeTopBar(onLoginClick: () -> Unit, onProductosClick: () -> Unit) {
-    TopAppBar(
-        title = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(id = R.drawable.iconmain),
-                    contentDescription = "Logo",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .padding(end = 8.dp)
-                )
-                Text("Tienda Huerto Hogar", fontWeight = FontWeight.Bold)
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFF2E8B57),
-            titleContentColor = Color.White
-        ),
-        actions = {
-            TextButton(onClick = onProductosClick) {
-                Text("Productos", color = Color.White)
-            }
-            TextButton(onClick = onLoginClick) {
-                Text("Iniciar sesión", color = Color.White)
-            }
-        }
-    )
 }
 
 @Composable
@@ -114,12 +89,9 @@ fun HeroSection(onProductosClick: () -> Unit) {
             .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 📜 Columna con texto
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -133,7 +105,7 @@ fun HeroSection(onProductosClick: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    "HuertoHogar es una tienda online dedicada a llevar la frescura y calidad de los productos del campo directamente a la puerta de nuestros clientes en Chile. Con más de 6 años de experiencia, operamos en más de 9 puntos del país, incluyendo Santiago, Puerto Montt, Villarica, Nacimiento, Viña del Mar, Valparaíso y Concepción. Promovemos un estilo de vida saludable y sostenible.",
+                    "HuertoHogar es una tienda online dedicada a llevar la frescura y calidad del campo directamente a tu mesa. ¡Más de 6 años cultivando bienestar en Chile!",
                     color = Color.White,
                     fontSize = 14.sp,
                     lineHeight = 20.sp
@@ -147,11 +119,10 @@ fun HeroSection(onProductosClick: () -> Unit) {
                 }
             }
 
-            // 🖼️ Imagen del banner
             Image(
                 painter = painterResource(
                     id = context.resources.getIdentifier(
-                        "banner1", // nombre del archivo sin extensión
+                        "banner1",
                         "drawable",
                         context.packageName
                     )
@@ -159,6 +130,7 @@ fun HeroSection(onProductosClick: () -> Unit) {
                 contentDescription = "Huerto Hogar",
                 modifier = Modifier
                     .weight(1f)
+                    .fillMaxWidth()
                     .height(200.dp)
                     .clip(RoundedCornerShape(12.dp)),
                 contentScale = ContentScale.Crop
@@ -167,60 +139,21 @@ fun HeroSection(onProductosClick: () -> Unit) {
     }
 }
 
-
 @Composable
 fun ProductosMasCompradosTitle() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color(0xFF2E8B57))
-            .padding(12.dp)
+            .padding(vertical = 12.dp)
     ) {
         Text(
-            text = "Productos más comprados!",
+            text = "🌿 Productos más comprados 🌿",
             color = Color.White,
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.Center)
         )
-    }
-}
-
-@Composable
-fun ProductoCard(producto: Producto) {
-    val context = LocalContext.current
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp)
-        ) {
-            Image(
-                painter = painterResource(id = context.resources.getIdentifier(
-                    producto.imagen1,
-                    "drawable",
-                    context.packageName
-                )), //
-                contentDescription = producto.nombre,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(producto.nombre, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            Text(producto.descripcion, fontSize = 14.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(
-                onClick = {},
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E8B57))
-            ) {
-                Text("Comprar: ${producto.precioFormateado}", color = Color.White)
-            }
-        }
     }
 }
 
@@ -236,7 +169,10 @@ fun FooterSection() {
         Text("HuertoHogar", color = Color.White, fontWeight = FontWeight.Bold)
         Text("Frescura natural desde el huerto directa a tu mesa", color = Color.White)
         Spacer(modifier = Modifier.height(12.dp))
-        Text("© 2025 HuertoHogar. Todos los derechos reservados.", color = Color.White, fontSize = 12.sp)
+        Text(
+            "© 2025 HuertoHogar. Todos los derechos reservados.",
+            color = Color.White,
+            fontSize = 12.sp
+        )
     }
 }
-
