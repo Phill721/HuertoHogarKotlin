@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.cosa.presentation.ui.screens.HomeScreen
 import com.example.cosa.presentation.ui.screens.ProductosScreen
+import com.example.cosa.presentation.ui.screens.ProductDetailScreen
 import com.example.cosa.presentation.viewmodel.ProductoViewModel
 import com.example.cosa.ui.theme.CosaTheme
 
@@ -29,14 +30,27 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation() {
     val navController: NavHostController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(
+        navController = navController,
+        startDestination = "home"
+    ) {
+        // Pantalla principal
         composable("home") {
-            HomeScreen(navController)
+            HomeScreen(navController = navController)
         }
 
+        // Lista de productos
         composable("productos") {
             val productoViewModel: ProductoViewModel = viewModel()
             ProductosScreen(viewModel = productoViewModel, navController = navController)
+        }
+
+        // Detalle de producto
+        composable("producto/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            if (id != null) {
+                ProductDetailScreen(navController = navController, productoId = id)
+            }
         }
     }
 }

@@ -65,7 +65,7 @@ fun HomeScreen(navController: NavController) {
                                 .background(Color.White)
                                 .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
-                            ProductoCard(producto = producto)
+                            ProductoCard(producto = producto, navController = navController)
                         }
                     }
 

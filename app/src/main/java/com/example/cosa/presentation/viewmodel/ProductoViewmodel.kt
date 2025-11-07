@@ -49,4 +49,8 @@ class ProductoViewModel(
             _isLoading.value = false
         }
     }
+
+    fun obtenerProductoPorId(id: String): Producto? {
+        return productos.value.find { it.id.equals(id)  }
+    }
 }

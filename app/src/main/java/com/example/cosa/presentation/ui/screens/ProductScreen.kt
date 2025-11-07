@@ -81,15 +81,12 @@ fun ProductosScreen(viewModel: ProductoViewModel, navController: NavController) 
                 }
 
                 else -> {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(bottom = 16.dp)
-                    ) {
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(productos) { producto ->
-                            ProductoCard(producto = producto)
+                            ProductoCard(producto = producto, navController = navController)
                         }
                     }
+
                 }
             }
         }
