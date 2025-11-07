@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.cosa.R
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
 import com.example.cosa.presentation.ui.Components.ProductoCard
 import com.example.cosa.presentation.viewmodel.ProductoViewModel
