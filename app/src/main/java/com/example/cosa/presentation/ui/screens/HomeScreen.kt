@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.cosa.presentation.ui.Components.FooterSection
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
 import com.example.cosa.presentation.ui.Components.ProductoCard
 import com.example.cosa.presentation.viewmodel.ProductoViewModel
@@ -156,22 +157,4 @@ fun ProductosMasCompradosTitle() {
     }
 }
 
-@Composable
-fun FooterSection() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFF2E8B57))
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("HuertoHogar", color = Color.White, fontWeight = FontWeight.Bold)
-        Text("Frescura natural desde el huerto directa a tu mesa", color = Color.White)
-        Spacer(modifier = Modifier.height(12.dp))
-        Text(
-            "© 2025 HuertoHogar. Todos los derechos reservados.",
-            color = Color.White,
-            fontSize = 12.sp
-        )
-    }
-}
+

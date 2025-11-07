@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cosa.data.Enum.CategoriaENUM
+import com.example.cosa.presentation.ui.Components.FooterSection
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
 import com.example.cosa.presentation.ui.Components.ProductoCard
 import com.example.cosa.presentation.viewmodel.ProductoViewModel
@@ -38,7 +39,6 @@ fun ProductosScreen(viewModel: ProductoViewModel, navController: NavController) 
         viewModel.filtrarPorCategoria(categoriaEnum)
     }
 
-    // Ahora HuertoNavbar envuelve TODO y nos da el padding correcto
     HuertoNavbar(navController = navController) { innerPadding ->
         Column(
             modifier = Modifier
@@ -85,7 +85,10 @@ fun ProductosScreen(viewModel: ProductoViewModel, navController: NavController) 
                         items(productos) { producto ->
                             ProductoCard(producto = producto, navController = navController)
                         }
+
+                        item { FooterSection() }
                     }
+
 
                 }
             }

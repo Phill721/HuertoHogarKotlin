@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cosa.R
+import com.example.cosa.presentation.ui.Components.FooterSection
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -91,6 +92,9 @@ fun BlogsScreen(navController: NavController) {
             item {
                 Spacer(modifier = Modifier.height(24.dp))
                 UserPostsSection()
+            }
+            item{
+                FooterSection()
             }
         }
     }
@@ -173,7 +177,6 @@ fun BlogsOficiales() {
     }
 }
 
-// 📝 Nueva parte
 @Composable
 fun UserPostsSection() {
     val context = LocalContext.current

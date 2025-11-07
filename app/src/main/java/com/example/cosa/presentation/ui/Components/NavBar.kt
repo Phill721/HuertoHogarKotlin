@@ -48,7 +48,9 @@ fun HuertoNavbar(
                     navController?.navigate("productos")
                     scope.launch { drawerState.close() }
                 }
-                DrawerButton("Nosotros") { scope.launch { drawerState.close() } }
+                DrawerButton("Nosotros") {
+                    navController?.navigate("nosotros")
+                    scope.launch { drawerState.close() } }
                 DrawerButton("Blogs") {
                     navController?.navigate("blogs")
                     scope.launch { drawerState.close() } }

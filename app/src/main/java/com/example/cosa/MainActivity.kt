@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.cosa.presentation.ui.screens.BlogsScreen
 import com.example.cosa.presentation.ui.screens.HomeScreen
+import com.example.cosa.presentation.ui.screens.NosotrosScreen
 import com.example.cosa.presentation.ui.screens.ProductosScreen
 import com.example.cosa.presentation.ui.screens.ProductDetailScreen
 import com.example.cosa.presentation.viewmodel.ProductoViewModel
@@ -56,6 +57,10 @@ fun AppNavigation() {
 
         composable("blogs") {
             BlogsScreen(navController = navController)
+        }
+
+        composable("nosotros") {
+            NosotrosScreen(navController = navController)
         }
     }
 }
