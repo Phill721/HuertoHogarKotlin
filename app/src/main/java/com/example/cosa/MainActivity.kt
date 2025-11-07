@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.cosa.presentation.ui.screens.BlogsScreen
+import com.example.cosa.presentation.ui.screens.ContactoScreen
 import com.example.cosa.presentation.ui.screens.HomeScreen
 import com.example.cosa.presentation.ui.screens.NosotrosScreen
 import com.example.cosa.presentation.ui.screens.ProductosScreen
@@ -54,13 +55,17 @@ fun AppNavigation() {
                 ProductDetailScreen(navController = navController, productoId = id)
             }
         }
-
+        // Blogs
         composable("blogs") {
             BlogsScreen(navController = navController)
         }
-
+        // Seccion nosotros
         composable("nosotros") {
             NosotrosScreen(navController = navController)
+        }
+        // Contacto
+        composable("contacto"){
+            ContactoScreen(navController = navController)
         }
     }
 }
