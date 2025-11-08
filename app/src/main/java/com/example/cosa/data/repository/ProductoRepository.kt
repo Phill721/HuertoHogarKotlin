@@ -1,4 +1,4 @@
-package com.example.cosa.data.Repository
+package com.example.cosa.data.repository
 
 import com.example.cosa.data.Enum.CategoriaENUM
 import com.example.cosa.data.model.Producto

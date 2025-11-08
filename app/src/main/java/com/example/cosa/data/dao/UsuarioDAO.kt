@@ -13,4 +13,7 @@ interface UsuarioDAO {
     @Query("SELECT * FROM usuarios WHERE correo = :correo LIMIT 1")
     suspend fun getUsuarioPorCorreo(correo: String): Usuario?
 
+    @Query("SELECT * FROM usuarios WHERE usuario = :usuario LIMIT 1")
+    suspend fun getUsuarioPorNombre(usuario: String): Usuario?
+
 }

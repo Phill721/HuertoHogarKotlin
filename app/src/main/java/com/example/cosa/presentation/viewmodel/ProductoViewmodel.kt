@@ -2,7 +2,7 @@ package com.example.cosa.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cosa.data.Repository.ProductoRepository
+import com.example.cosa.data.repository.ProductoRepository
 import com.example.cosa.data.model.Producto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
