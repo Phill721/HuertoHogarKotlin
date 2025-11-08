@@ -1,16 +1,7 @@
 package com.example.cosa.presentation.ui.Components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Divider
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +26,6 @@ fun CartModal(
                 if (items.isEmpty()) {
                     Text("Tu carrito está vacío.")
                 } else {
-                    // muestra lista sencilla
                     Column {
                         items.forEach { it ->
                             Row(
@@ -69,7 +59,11 @@ fun CartModal(
             }
         },
         confirmButton = {
-            TextButton(onClick = onGoToCart) {
+            TextButton(
+                onClick = {
+                    onGoToCart() // 🔥 aquí navegás a CartScreen
+                }
+            ) {
                 Text("Ir al carrito")
             }
         },

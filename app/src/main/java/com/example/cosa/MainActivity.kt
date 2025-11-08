@@ -140,5 +140,12 @@ fun AppNavigation(sessionViewModel: SessionViewModel, cartViewModel: CartViewMod
                 cartViewModel = cartViewModel
             )
         }
+        composable("carrito"){
+            CartScreen(
+                navController = navController,
+                cartViewModel = cartViewModel,
+                sessionViewModel = sessionViewModel
+            )
+        }
     }
 }
