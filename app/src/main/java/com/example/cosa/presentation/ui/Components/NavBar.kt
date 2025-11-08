@@ -57,6 +57,9 @@ fun HuertoNavbar(
                 DrawerButton("Contacto") {
                     navController?.navigate("contacto")
                     scope.launch { drawerState.close() } }
+                DrawerButton("Registrarse") {
+                    navController?.navigate("registro")
+                    scope.launch { drawerState.close() } }
                 DrawerButton("Iniciar sesión") { scope.launch { drawerState.close() } }
                 DrawerButton("Carrito 🛒") { scope.launch { drawerState.close() } }
             }

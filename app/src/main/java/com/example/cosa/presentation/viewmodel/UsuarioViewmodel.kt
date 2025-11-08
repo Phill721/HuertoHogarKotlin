@@ -60,12 +60,12 @@ class UsuarioViewModel(private val repo: UsuarioRepository) : ViewModel() {
     }
 
     // Funciones auxiliares de validación
-    private fun validarCorreo(correo: String): Boolean {
+    public fun validarCorreo(correo: String): Boolean {
         val regex = Regex("^[A-Za-z0-9+_.-]+@(duoc\\.cl|profesor\\.duoc\\.cl|gmail\\.com)$")
         return regex.matches(correo)
     }
 
-    private fun validarRut(rut: String): Boolean {
+    public fun validarRut(rut: String): Boolean {
         val cleanRut = rut.replace(".", "").replace("-", "").uppercase()
         if (cleanRut.length < 8) return false
 
