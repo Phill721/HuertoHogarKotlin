@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cosa.data.model.Producto
 
+
 @Composable
 fun ProductoCard(producto: Producto, navController: NavController) {
     val context = LocalContext.current

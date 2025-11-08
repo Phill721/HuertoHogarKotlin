@@ -14,20 +14,24 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cosa.R
 import com.example.cosa.presentation.viewmodel.SessionViewModel
+import com.example.cosa.presentation.viewmodel.CartViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HuertoNavbar(
     navController: NavController? = null,
-    sessionViewModel: SessionViewModel, // 👈 agregado
+    sessionViewModel: SessionViewModel,
+    cartViewModel: CartViewModel, // 👈 agregado
     content: @Composable (PaddingValues) -> Unit
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
-    // 👀 Observamos el estado de sesión
     val isLoggedIn by sessionViewModel.isLoggedIn.collectAsState(initial = false)
+
+    // 👇 Estado del modal del carrito
+    var showCart by remember { mutableStateOf(false) }
+    val itemCount by cartViewModel.itemCount.collectAsState()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -64,7 +68,7 @@ fun HuertoNavbar(
                     scope.launch { drawerState.close() }
                 }
 
-                // 🔥 Solo cambia esta parte según la sesión
+                // 🔥 Control de sesión
                 if (isLoggedIn) {
                     DrawerButton("Perfil") {
                         navController?.navigate("perfil")
@@ -88,7 +92,11 @@ fun HuertoNavbar(
                     }
                 }
 
-                DrawerButton("Carrito 🛒") { scope.launch { drawerState.close() } }
+                // 🛒 Botón del carrito en el drawer
+                DrawerButton("Carrito 🛒") {
+                    showCart = true
+                    scope.launch { drawerState.close() }
+                }
             }
         }
     ) {
@@ -125,12 +133,23 @@ fun HuertoNavbar(
                         }
                     },
                     actions = {
-                        IconButton(onClick = { navController?.navigate("carrito") }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.cart1),
-                                contentDescription = "Carrito",
-                                tint = Color.White
-                            )
+                        // 🛍 Ícono del carrito con badge
+                        IconButton(onClick = { showCart = true }) {
+                            BadgedBox(
+                                badge = {
+                                    if (itemCount > 0) {
+                                        Badge {
+                                            Text(itemCount.toString())
+                                        }
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.cart1),
+                                    contentDescription = "Carrito",
+                                    tint = Color.White
+                                )
+                            }
                         }
                     }
                 )
@@ -139,6 +158,18 @@ fun HuertoNavbar(
                 content(innerPadding)
             }
         )
+
+        // 🛒 Modal del carrito (usa el tuyo, sin cambios)
+        if (showCart) {
+            CartModal(
+                cartViewModel = cartViewModel,
+                onClose = { showCart = false },
+                onGoToCart = {
+                    showCart = false
+                    navController?.navigate("carrito")
+                }
+            )
+        }
     }
 }
 

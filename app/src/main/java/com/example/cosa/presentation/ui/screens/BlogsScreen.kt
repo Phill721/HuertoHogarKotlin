@@ -27,16 +27,17 @@ import androidx.navigation.NavController
 import com.example.cosa.R
 import com.example.cosa.presentation.ui.Components.FooterSection
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
+import com.example.cosa.presentation.viewmodel.CartViewModel
 import com.example.cosa.presentation.viewmodel.SessionViewModel
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 
 @Composable
-fun BlogsScreen(navController: NavController, sessionViewModel: SessionViewModel) {
+fun BlogsScreen(navController: NavController, sessionViewModel: SessionViewModel, cartViewModel: CartViewModel) {
     val context = LocalContext.current
 
-    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel) { innerPadding ->
+    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel, cartViewModel = cartViewModel) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

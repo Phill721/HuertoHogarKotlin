@@ -14,14 +14,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
 import com.example.cosa.presentation.ui.helper.rememberUsuarioViewModel
+import com.example.cosa.presentation.viewmodel.CartViewModel
 import com.example.cosa.presentation.viewmodel.SessionViewModel
 
 @Composable
-fun LoginScreen(navController: NavController, sessionViewModel: SessionViewModel) {
+fun LoginScreen(navController: NavController, sessionViewModel: SessionViewModel, cartViewModel: CartViewModel) {
     val usuarioViewModel = rememberUsuarioViewModel()
     val context = LocalContext.current
 
-    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel) { innerPadding ->
+    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel, cartViewModel = cartViewModel) { innerPadding ->
 
         var correo by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }

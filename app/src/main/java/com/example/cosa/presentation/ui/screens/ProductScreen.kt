@@ -17,11 +17,12 @@ import com.example.cosa.data.Enum.CategoriaENUM
 import com.example.cosa.presentation.ui.Components.FooterSection
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
 import com.example.cosa.presentation.ui.Components.ProductoCard
+import com.example.cosa.presentation.viewmodel.CartViewModel
 import com.example.cosa.presentation.viewmodel.ProductoViewModel
 import com.example.cosa.presentation.viewmodel.SessionViewModel
 
 @Composable
-fun ProductosScreen(viewModel: ProductoViewModel, navController: NavController, sessionViewModel: SessionViewModel) {
+fun ProductosScreen(viewModel: ProductoViewModel, navController: NavController, sessionViewModel: SessionViewModel, cartViewModel: CartViewModel) {
     val productos by viewModel.productos.collectAsState(initial = emptyList())
     val isLoading by viewModel.isLoading.collectAsState(initial = true)
 
@@ -40,7 +41,7 @@ fun ProductosScreen(viewModel: ProductoViewModel, navController: NavController, 
         viewModel.filtrarPorCategoria(categoriaEnum)
     }
 
-    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel) { innerPadding ->
+    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel, cartViewModel = cartViewModel) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

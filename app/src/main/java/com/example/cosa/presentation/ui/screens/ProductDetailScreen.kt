@@ -24,6 +24,8 @@ import androidx.navigation.NavController
 import com.example.cosa.R
 import com.example.cosa.data.model.Producto
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
+import com.example.cosa.presentation.viewmodel.CartViewModel
+import com.example.cosa.data.model.CartItem
 import com.example.cosa.presentation.viewmodel.ProductoViewModel
 import com.example.cosa.presentation.viewmodel.SessionViewModel
 import java.text.NumberFormat
@@ -34,35 +36,34 @@ fun ProductDetailScreen(
     navController: NavController,
     productoId: String,
     viewModel: ProductoViewModel = viewModel(),
-    sessionViewModel: SessionViewModel
+    sessionViewModel: SessionViewModel,
+    cartViewModel: CartViewModel
 ) {
     val productos by viewModel.productos.collectAsState(initial = emptyList())
     val isLoading by viewModel.isLoading.collectAsState(initial = true)
     val context = LocalContext.current
     val resources: Resources = context.resources
 
-    // intentar encontrar el producto por id (el repo tiene ids tipo "fruit1", "verdura1", etc.)
     val producto: Producto? = productos.find { it.id == productoId }
 
-    // estado imagen principal (nombre de recurso: "fruit1", "manzanafuji2", etc.)
     var imagenPrincipal by remember { mutableStateOf(producto?.imagen1 ?: "") }
-
-    // cantidad como texto (para poder controlar input fácilmente)
     var cantidadText by remember { mutableStateOf("1") }
 
-    // modal (AlertDialog) estado
     var showDialog by remember { mutableStateOf(false) }
     var dialogTitle by remember { mutableStateOf("") }
     var dialogMessage by remember { mutableStateOf("") }
 
-    // helper para formatear precio -> $5.000
     fun formatPrecio(precio: Double): String {
-        val nf = NumberFormat.getNumberInstance(Locale("es", "ES")) // separador miles
+        val nf = NumberFormat.getNumberInstance(Locale("es", "ES"))
         val whole = nf.format(precio.toLong())
         return "$$whole"
     }
 
-    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel) { innerPadding ->
+    HuertoNavbar(
+        navController = navController,
+        sessionViewModel = sessionViewModel,
+        cartViewModel = cartViewModel
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,7 +78,6 @@ fun ProductDetailScreen(
                 }
 
                 producto == null -> {
-                    // Producto no encontrado
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -100,14 +100,13 @@ fun ProductDetailScreen(
                 }
 
                 else -> {
-                    // Pantalla detalle real
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         item {
-                            // Breadcrumb (simple)
+                            // breadcrumb
                             Row(modifier = Modifier.fillMaxWidth()) {
                                 Text(
                                     text = "Inicio",
@@ -119,7 +118,6 @@ fun ProductDetailScreen(
                                     text = producto.categoria.name.replace('_', ' '),
                                     color = Color(0xFF2E8B57),
                                     modifier = Modifier.clickable {
-                                        // navegar a productos con categoría (si quieres implementar query, adaptar nav)
                                         navController.navigate("productos")
                                     }
                                 )
@@ -130,12 +128,21 @@ fun ProductDetailScreen(
                         }
 
                         item {
-                            // Row con imagenes y detalle
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                                // IMAGEN PRINCIPAL Y THUMBNAILS
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                // IMAGEN PRINCIPAL + THUMBS
                                 Column(modifier = Modifier.weight(1f)) {
-                                    val mainResId = resources.getIdentifier(imagenPrincipal, "drawable", context.packageName)
-                                    val mainPainter = if (mainResId != 0) painterResource(id = mainResId) else painterResource(id = R.drawable.iconmain)
+                                    val mainResId = resources.getIdentifier(
+                                        imagenPrincipal,
+                                        "drawable",
+                                        context.packageName
+                                    )
+                                    val mainPainter = if (mainResId != 0)
+                                        painterResource(id = mainResId)
+                                    else
+                                        painterResource(id = R.drawable.iconmain)
 
                                     Card(
                                         modifier = Modifier
@@ -153,12 +160,27 @@ fun ProductDetailScreen(
 
                                     Spacer(modifier = Modifier.height(8.dp))
 
-                                    // thumbnails
-                                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                        val thumbs = listOf(producto.imagen1, producto.imagen2, producto.imagen3, producto.imagen4)
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        val thumbs = listOf(
+                                            producto.imagen1,
+                                            producto.imagen2,
+                                            producto.imagen3,
+                                            producto.imagen4
+                                        )
                                         thumbs.forEach { imgName ->
-                                            val resId = resources.getIdentifier(imgName, "drawable", context.packageName)
-                                            val painter = if (resId != 0) painterResource(id = resId) else painterResource(id = R.drawable.iconmain)
+                                            val resId = resources.getIdentifier(
+                                                imgName,
+                                                "drawable",
+                                                context.packageName
+                                            )
+                                            val painter = if (resId != 0)
+                                                painterResource(id = resId)
+                                            else
+                                                painterResource(id = R.drawable.iconmain)
+
                                             Image(
                                                 painter = painter,
                                                 contentDescription = imgName,
@@ -186,16 +208,17 @@ fun ProductDetailScreen(
 
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Divider()
-
                                     Spacer(modifier = Modifier.height(8.dp))
+
                                     Text(producto.descripcion)
                                     Spacer(modifier = Modifier.height(12.dp))
+
                                     Text("Cantidad:", fontWeight = FontWeight.Medium)
                                     OutlinedTextField(
                                         value = cantidadText,
                                         onValueChange = { new ->
-                                            // permitir solo números
-                                            if (new.all { it.isDigit() } || new.isEmpty()) cantidadText = new
+                                            if (new.all { it.isDigit() } || new.isEmpty())
+                                                cantidadText = new
                                         },
                                         singleLine = true,
                                         modifier = Modifier.width(120.dp)
@@ -203,6 +226,7 @@ fun ProductDetailScreen(
 
                                     Spacer(modifier = Modifier.height(12.dp))
 
+                                    // ✅ Botón Añadir al carrito
                                     Button(
                                         onClick = {
                                             val cantidad = cantidadText.toIntOrNull() ?: 0
@@ -213,12 +237,24 @@ fun ProductDetailScreen(
                                                 return@Button
                                             }
 
-                                            // Aquí podrías llamar a un repo/carrito para agregar el producto
+                                            // 💚 Agregar al carrito
+                                            val item = CartItem(
+                                                productoId = producto.id,
+                                                nombre = producto.nombre,
+                                                precio = producto.precio,
+                                                cantidad = cantidad,
+                                                imagenResName = producto.imagen1
+                                            )
+                                            cartViewModel.addProduct(item)
+
                                             dialogTitle = "Producto agregado!"
-                                            dialogMessage = "${producto.nombre} x $cantidad agregado al carrito."
+                                            dialogMessage =
+                                                "${producto.nombre} x$cantidad agregado al carrito."
                                             showDialog = true
                                         },
-                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E8B57)),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(0xFF2E8B57)
+                                        ),
                                         modifier = Modifier.padding(top = 8.dp)
                                     ) {
                                         Text("Añadir al carrito", color = Color.White)
@@ -232,7 +268,6 @@ fun ProductDetailScreen(
 
                         item {
                             Spacer(modifier = Modifier.height(12.dp))
-                            // lugar para reviews (placeholder)
                             Text("Reviews", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                             Text("Aquí puedes agregar la sección de reseñas (ReviewSection).")
                         }
@@ -242,7 +277,7 @@ fun ProductDetailScreen(
         }
     }
 
-    // Modal tipo AlertDialog
+    // AlertDialog de confirmación
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },

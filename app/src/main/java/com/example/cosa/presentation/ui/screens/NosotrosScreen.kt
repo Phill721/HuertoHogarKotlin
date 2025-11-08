@@ -20,11 +20,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cosa.R
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
+import com.example.cosa.presentation.viewmodel.CartViewModel
 import com.example.cosa.presentation.viewmodel.SessionViewModel
 
 @Composable
-fun NosotrosScreen(navController: NavController, sessionViewModel: SessionViewModel) {
-    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel) { innerPadding ->
+fun NosotrosScreen(navController: NavController, sessionViewModel: SessionViewModel, cartViewModel: CartViewModel) {
+    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel, cartViewModel = cartViewModel) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

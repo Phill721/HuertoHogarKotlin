@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
 import com.example.cosa.presentation.ui.Components.ModalComponent
+import com.example.cosa.presentation.viewmodel.CartViewModel
 import com.example.cosa.presentation.viewmodel.SessionViewModel
 import com.example.cosa.presentation.viewmodel.UsuarioViewModel
 
@@ -22,7 +23,8 @@ import com.example.cosa.presentation.viewmodel.UsuarioViewModel
 fun RegisterScreen(
     navController: NavController,
     usuarioViewModel: UsuarioViewModel,
-    sessionViewModel: SessionViewModel
+    sessionViewModel: SessionViewModel,
+    cartViewModel: CartViewModel
 ) {
     var rut by remember { mutableStateOf("") }
     var nombreUsuario by remember { mutableStateOf("") }
@@ -34,7 +36,7 @@ fun RegisterScreen(
     var modalTitle by remember { mutableStateOf("") }
     var modalMessage by remember { mutableStateOf("") }
 
-    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel) { innerPadding ->
+    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel, cartViewModel = cartViewModel) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

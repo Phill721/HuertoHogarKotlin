@@ -23,16 +23,17 @@ import androidx.navigation.NavController
 import com.example.cosa.presentation.ui.Components.FooterSection
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
 import com.example.cosa.presentation.ui.Components.ProductoCard
+import com.example.cosa.presentation.viewmodel.CartViewModel
 import com.example.cosa.presentation.viewmodel.ProductoViewModel
 import com.example.cosa.presentation.viewmodel.SessionViewModel
 
 @Composable
-fun HomeScreen(navController: NavController, sessionViewModel: SessionViewModel) {
+fun HomeScreen(navController: NavController, sessionViewModel: SessionViewModel, cartViewModel: CartViewModel) {
     val viewModel: ProductoViewModel = viewModel()
     val productos by viewModel.productos.collectAsState(initial = emptyList())
     val isLoading by viewModel.isLoading.collectAsState(initial = true)
 
-    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel) { innerPadding ->
+    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel, cartViewModel = cartViewModel) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

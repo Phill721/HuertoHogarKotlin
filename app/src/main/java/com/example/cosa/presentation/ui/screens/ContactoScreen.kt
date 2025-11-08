@@ -16,10 +16,11 @@ import androidx.navigation.NavController
 import com.example.cosa.R
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
 import com.example.cosa.presentation.ui.Components.ModalComponent
+import com.example.cosa.presentation.viewmodel.CartViewModel
 import com.example.cosa.presentation.viewmodel.SessionViewModel
 
 @Composable
-fun ContactoScreen(navController: NavController, sessionViewModel: SessionViewModel) {
+fun ContactoScreen(navController: NavController, sessionViewModel: SessionViewModel, cartViewModel: CartViewModel) {
     var nombre by remember { mutableStateOf(TextFieldValue("")) }
     var correo by remember { mutableStateOf(TextFieldValue("")) }
     var contenido by remember { mutableStateOf(TextFieldValue("")) }
@@ -35,7 +36,7 @@ fun ContactoScreen(navController: NavController, sessionViewModel: SessionViewMo
     }
 
     // Usamos el HuertoNavbar que provee innerPadding
-    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel) { innerPadding ->
+    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel, cartViewModel = cartViewModel) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()

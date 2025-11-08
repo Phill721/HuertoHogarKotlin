@@ -21,8 +21,8 @@ import com.example.cosa.ui.theme.CosaTheme
 
 class MainActivity : ComponentActivity() {
 
-    // ✅ Mantiene la sesión aunque cierres la app
     private val sessionViewModel: SessionViewModel by viewModels()
+    private val cartViewModel: CartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,14 +33,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             CosaTheme {
                 // 👇 Pasamos la instancia única del SessionViewModel
-                AppNavigation(sessionViewModel = sessionViewModel)
+                AppNavigation(
+                    sessionViewModel = sessionViewModel,
+                    cartViewModel = cartViewModel
+                )
             }
         }
     }
 }
 
 @Composable
-fun AppNavigation(sessionViewModel: SessionViewModel) { // 👈 se recibe acá
+fun AppNavigation(sessionViewModel: SessionViewModel, cartViewModel: CartViewModel) { // 👈 se recibe acá
     val navController: NavHostController = rememberNavController()
 
     NavHost(
@@ -51,7 +54,8 @@ fun AppNavigation(sessionViewModel: SessionViewModel) { // 👈 se recibe acá
         composable("home") {
             HomeScreen(
                 navController = navController,
-                sessionViewModel = sessionViewModel
+                sessionViewModel = sessionViewModel,
+                cartViewModel = cartViewModel
             )
         }
 
@@ -61,7 +65,8 @@ fun AppNavigation(sessionViewModel: SessionViewModel) { // 👈 se recibe acá
             ProductosScreen(
                 viewModel = productoViewModel,
                 navController = navController,
-                sessionViewModel = sessionViewModel
+                sessionViewModel = sessionViewModel,
+                cartViewModel = cartViewModel
             )
         }
 
@@ -69,7 +74,7 @@ fun AppNavigation(sessionViewModel: SessionViewModel) { // 👈 se recibe acá
         composable("producto/{id}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")
             if (id != null) {
-                ProductDetailScreen(navController = navController, productoId = id, sessionViewModel = sessionViewModel)
+                ProductDetailScreen(navController = navController, productoId = id, sessionViewModel = sessionViewModel, cartViewModel = cartViewModel)
             }
         }
 
@@ -77,17 +82,27 @@ fun AppNavigation(sessionViewModel: SessionViewModel) { // 👈 se recibe acá
         composable("blogs") {
             BlogsScreen(
                 navController = navController,
-                sessionViewModel = sessionViewModel)
+                sessionViewModel = sessionViewModel,
+                cartViewModel = cartViewModel
+            )
         }
 
         // 👥 Nosotros
         composable("nosotros") {
-            NosotrosScreen(navController = navController, sessionViewModel = sessionViewModel)
+            NosotrosScreen(
+                navController = navController,
+                sessionViewModel = sessionViewModel,
+                cartViewModel = cartViewModel
+            )
         }
 
         // ☎️ Contacto
         composable("contacto") {
-            ContactoScreen(navController = navController, sessionViewModel = sessionViewModel)
+            ContactoScreen(
+                navController = navController,
+                sessionViewModel = sessionViewModel,
+                cartViewModel = cartViewModel
+            )
         }
 
         // 🧾 Registro
@@ -109,14 +124,20 @@ fun AppNavigation(sessionViewModel: SessionViewModel) { // 👈 se recibe acá
             val factory = remember { UsuarioViewModelFactory(repo) }
             val usuarioViewModel: UsuarioViewModel = viewModel(factory = factory)
 
-            RegisterScreen(navController = navController, usuarioViewModel = usuarioViewModel, sessionViewModel = sessionViewModel)
+            RegisterScreen(
+                navController = navController,
+                usuarioViewModel = usuarioViewModel,
+                sessionViewModel = sessionViewModel,
+                cartViewModel = cartViewModel
+            )
         }
 
         // 🔐 Login
         composable("login") {
             LoginScreen(
                 navController = navController,
-                sessionViewModel = sessionViewModel
+                sessionViewModel = sessionViewModel,
+                cartViewModel = cartViewModel
             )
         }
     }
