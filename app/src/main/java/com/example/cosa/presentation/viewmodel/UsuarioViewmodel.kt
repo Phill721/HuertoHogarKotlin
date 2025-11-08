@@ -89,4 +89,31 @@ class UsuarioViewModel(private val repo: UsuarioRepository) : ViewModel() {
 
         return dv == dvEsperado
     }
+
+    fun iniciarSesion(
+        correo: String,
+        password: String,
+        onResult: (Boolean, String) -> Unit
+    ) {
+        viewModelScope.launch {
+            if (!validarCorreo(correo)) {
+                onResult(false, "Correo inválido")
+                return@launch
+            }
+
+            val usuario = repo.obtenerPorCorreo(correo)
+            if (usuario == null) {
+                onResult(false, "Usuario no encontrado")
+                return@launch
+            }
+
+            if (usuario.pass != password) {
+                onResult(false, "Contraseña incorrecta")
+                return@launch
+            }
+
+            onResult(true, "Inicio de sesión exitoso 🎉")
+        }
+    }
+
 }

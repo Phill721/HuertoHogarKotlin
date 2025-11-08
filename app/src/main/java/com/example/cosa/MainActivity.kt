@@ -17,6 +17,7 @@ import com.example.cosa.data.repository.UsuarioRepository
 import com.example.cosa.presentation.ui.screens.BlogsScreen
 import com.example.cosa.presentation.ui.screens.ContactoScreen
 import com.example.cosa.presentation.ui.screens.HomeScreen
+import com.example.cosa.presentation.ui.screens.LoginScreen
 import com.example.cosa.presentation.ui.screens.NosotrosScreen
 import com.example.cosa.presentation.ui.screens.ProductosScreen
 import com.example.cosa.presentation.ui.screens.ProductDetailScreen
@@ -101,6 +102,9 @@ fun AppNavigation() {
 
             // 5️⃣ Pasarlo al RegisterScreen
             RegisterScreen(navController = navController, usuarioViewModel = usuarioViewModel)
+        }
+        composable("login"){
+            LoginScreen(navController = navController)
         }
     }
 }

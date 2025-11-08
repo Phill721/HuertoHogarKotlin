@@ -13,4 +13,7 @@ class UsuarioRepository(private val usuarioDAO: UsuarioDAO) {
     suspend fun existeUsuario(usuario: String): Boolean {
         return usuarioDAO.getUsuarioPorNombre(usuario) != null
     }
+    suspend fun obtenerPorCorreo(correo: String): Usuario? {
+        return usuarioDAO.getUsuarioPorCorreo(correo)
+    }
 }
