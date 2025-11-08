@@ -1,4 +1,3 @@
-// File: HuertoNavbar.kt (reemplaza el existente)
 package com.example.cosa.presentation.ui.Components
 
 import androidx.compose.foundation.layout.*
@@ -14,17 +13,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cosa.R
+import com.example.cosa.presentation.viewmodel.SessionViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HuertoNavbar(
     navController: NavController? = null,
-    // content slot: la pantalla que use este navbar se pasa aquí
+    sessionViewModel: SessionViewModel, // 👈 agregado
     content: @Composable (PaddingValues) -> Unit
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    // 👀 Observamos el estado de sesión
+    val isLoggedIn by sessionViewModel.isLoggedIn.collectAsState(initial = false)
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -50,24 +53,45 @@ fun HuertoNavbar(
                 }
                 DrawerButton("Nosotros") {
                     navController?.navigate("nosotros")
-                    scope.launch { drawerState.close() } }
+                    scope.launch { drawerState.close() }
+                }
                 DrawerButton("Blogs") {
                     navController?.navigate("blogs")
-                    scope.launch { drawerState.close() } }
+                    scope.launch { drawerState.close() }
+                }
                 DrawerButton("Contacto") {
                     navController?.navigate("contacto")
-                    scope.launch { drawerState.close() } }
-                DrawerButton("Registrarse") {
-                    navController?.navigate("registro")
-                    scope.launch { drawerState.close() } }
-                DrawerButton("Iniciar sesión") {
-                    navController?.navigate("login")
-                    scope.launch { drawerState.close() } }
+                    scope.launch { drawerState.close() }
+                }
+
+                // 🔥 Solo cambia esta parte según la sesión
+                if (isLoggedIn) {
+                    DrawerButton("Perfil") {
+                        navController?.navigate("perfil")
+                        scope.launch { drawerState.close() }
+                    }
+                    DrawerButton("Cerrar sesión") {
+                        navController?.let { nav ->
+                            sessionViewModel.logout(nav.context)
+                        }
+                        scope.launch { drawerState.close() }
+                        navController?.navigate("home")
+                    }
+                } else {
+                    DrawerButton("Registrarse") {
+                        navController?.navigate("registro")
+                        scope.launch { drawerState.close() }
+                    }
+                    DrawerButton("Iniciar sesión") {
+                        navController?.navigate("login")
+                        scope.launch { drawerState.close() }
+                    }
+                }
+
                 DrawerButton("Carrito 🛒") { scope.launch { drawerState.close() } }
             }
         }
     ) {
-        // Usamos Scaffold como content principal para fijar topBar y pasar padding internamente
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -101,7 +125,6 @@ fun HuertoNavbar(
                         }
                     },
                     actions = {
-                        // Si no tenés ic_cart, podés quitar o reemplazar
                         IconButton(onClick = { navController?.navigate("carrito") }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.cart1),
@@ -112,9 +135,7 @@ fun HuertoNavbar(
                     }
                 )
             },
-            // el bodyContent se entrega al caller a través del slot `content`
             content = { innerPadding ->
-                // Dejamos que la pantalla que use el navbar reciba el padding del scaffold
                 content(innerPadding)
             }
         )

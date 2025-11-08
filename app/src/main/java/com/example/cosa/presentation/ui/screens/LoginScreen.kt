@@ -7,20 +7,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
 import com.example.cosa.presentation.ui.helper.rememberUsuarioViewModel
+import com.example.cosa.presentation.viewmodel.SessionViewModel
 
 @Composable
-fun LoginScreen(navController: NavController) {
-
-    // 💡 Obtener el ViewModel usando el helper
+fun LoginScreen(navController: NavController, sessionViewModel: SessionViewModel) {
     val usuarioViewModel = rememberUsuarioViewModel()
+    val context = LocalContext.current
 
-    HuertoNavbar(navController = navController) { innerPadding ->
+    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel) { innerPadding ->
 
         var correo by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
@@ -29,16 +30,14 @@ fun LoginScreen(navController: NavController) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFE8F5E9)) // Fondo verde suave 🌿
+                .background(Color(0xFFE8F5E9))
                 .padding(innerPadding)
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
             Card(
                 modifier = Modifier.fillMaxWidth(0.9f),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White // Fondo blanco del card
-                ),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(8.dp)
             ) {
                 Column(
@@ -50,7 +49,7 @@ fun LoginScreen(navController: NavController) {
                     Text(
                         "Inicio de sesión para clientes",
                         fontSize = 22.sp,
-                        color = Color(0xFF2E7D32), // Verde oscuro
+                        color = Color(0xFF2E7D32),
                         modifier = Modifier.padding(bottom = 24.dp)
                     )
 
@@ -86,19 +85,21 @@ fun LoginScreen(navController: NavController) {
 
                     Button(
                         onClick = {
-                            usuarioViewModel.iniciarSesion(
-                                correo,
-                                password
-                            ) { exito, msg ->
+                            usuarioViewModel.iniciarSesion(correo, password) { exito, msg ->
                                 mensaje = msg
                                 if (exito) {
-                                    navController.navigate("home")
+                                    // ✅ Guardar sesión en DataStore
+                                    sessionViewModel.saveSession(context, correo)
+                                    // ✅ Navegar al home
+                                    navController.navigate("home") {
+                                        popUpTo("login") { inclusive = true } // evita volver atrás
+                                    }
                                 }
                             }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF2E8B57) // Verde principal del botón
+                            containerColor = Color(0xFF2E8B57)
                         )
                     ) {
                         Text("Iniciar Sesión", color = Color.White)
@@ -108,7 +109,7 @@ fun LoginScreen(navController: NavController) {
                         Text(
                             text = mensaje,
                             color = if (mensaje.contains("exitoso", ignoreCase = true))
-                                Color(0xFF2E7D32) // Verde éxito
+                                Color(0xFF2E7D32)
                             else
                                 MaterialTheme.colorScheme.error,
                             modifier = Modifier.padding(top = 16.dp)

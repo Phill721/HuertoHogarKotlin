@@ -24,14 +24,15 @@ import com.example.cosa.presentation.ui.Components.FooterSection
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
 import com.example.cosa.presentation.ui.Components.ProductoCard
 import com.example.cosa.presentation.viewmodel.ProductoViewModel
+import com.example.cosa.presentation.viewmodel.SessionViewModel
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, sessionViewModel: SessionViewModel) {
     val viewModel: ProductoViewModel = viewModel()
     val productos by viewModel.productos.collectAsState(initial = emptyList())
     val isLoading by viewModel.isLoading.collectAsState(initial = true)
 
-    HuertoNavbar(navController = navController) { innerPadding ->
+    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

@@ -25,6 +25,7 @@ import com.example.cosa.R
 import com.example.cosa.data.model.Producto
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
 import com.example.cosa.presentation.viewmodel.ProductoViewModel
+import com.example.cosa.presentation.viewmodel.SessionViewModel
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -32,7 +33,8 @@ import java.util.Locale
 fun ProductDetailScreen(
     navController: NavController,
     productoId: String,
-    viewModel: ProductoViewModel = viewModel()
+    viewModel: ProductoViewModel = viewModel(),
+    sessionViewModel: SessionViewModel
 ) {
     val productos by viewModel.productos.collectAsState(initial = emptyList())
     val isLoading by viewModel.isLoading.collectAsState(initial = true)
@@ -60,7 +62,7 @@ fun ProductDetailScreen(
         return "$$whole"
     }
 
-    HuertoNavbar(navController = navController) { innerPadding ->
+    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()

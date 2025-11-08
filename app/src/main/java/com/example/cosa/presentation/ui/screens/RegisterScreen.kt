@@ -14,13 +14,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.cosa.presentation.ui.Components.HuertoNavbar
 import com.example.cosa.presentation.ui.Components.ModalComponent
+import com.example.cosa.presentation.viewmodel.SessionViewModel
 import com.example.cosa.presentation.viewmodel.UsuarioViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     navController: NavController,
-    usuarioViewModel: UsuarioViewModel // ahora se inyecta desde afuera
+    usuarioViewModel: UsuarioViewModel,
+    sessionViewModel: SessionViewModel
 ) {
     var rut by remember { mutableStateOf("") }
     var nombreUsuario by remember { mutableStateOf("") }
@@ -32,7 +34,7 @@ fun RegisterScreen(
     var modalTitle by remember { mutableStateOf("") }
     var modalMessage by remember { mutableStateOf("") }
 
-    HuertoNavbar(navController = navController) { innerPadding ->
+    HuertoNavbar(navController = navController, sessionViewModel = sessionViewModel) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
