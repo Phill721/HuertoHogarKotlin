@@ -16,4 +16,8 @@ class UsuarioRepository(private val usuarioDAO: UsuarioDAO) {
     suspend fun obtenerPorCorreo(correo: String): Usuario? {
         return usuarioDAO.getUsuarioPorCorreo(correo)
     }
+
+    suspend fun actualizarUsuario(usuario: Usuario) {
+        usuarioDAO.update(usuario)
+    }
 }

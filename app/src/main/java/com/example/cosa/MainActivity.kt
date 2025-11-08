@@ -1,5 +1,6 @@
 package com.example.cosa
 
+import SessionViewModelFactory
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -21,18 +23,32 @@ import com.example.cosa.ui.theme.CosaTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val sessionViewModel: SessionViewModel by viewModels()
+    private lateinit var sessionViewModel: SessionViewModel
     private val cartViewModel: CartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 🔹 Inicializamos Room y Repository
+        val db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "app-db"
+        ).fallbackToDestructiveMigration()
+            .build()
+
+        val usuarioDao = db.usuarioDao()
+        val repo = UsuarioRepository(usuarioDao)
+
+        // 🔹 Inicializamos SessionViewModel con factory
+        val factory = SessionViewModelFactory(repo)
+        sessionViewModel = ViewModelProvider(this, factory)[SessionViewModel::class.java]
 
         // 🔥 Carga la sesión guardada apenas arranca la app
         sessionViewModel.loadSession(this)
 
         setContent {
             CosaTheme {
-                // 👇 Pasamos la instancia única del SessionViewModel
                 AppNavigation(
                     sessionViewModel = sessionViewModel,
                     cartViewModel = cartViewModel
@@ -145,6 +161,13 @@ fun AppNavigation(sessionViewModel: SessionViewModel, cartViewModel: CartViewMod
                 navController = navController,
                 cartViewModel = cartViewModel,
                 sessionViewModel = sessionViewModel
+            )
+        }
+        composable("perfil"){
+            ProfileScreen(
+                navController = navController,
+                sessionViewModel = sessionViewModel,
+                cartViewModel = cartViewModel
             )
         }
     }
