@@ -18,4 +18,10 @@ interface UsuarioDAO {
 
     @Query("SELECT * FROM usuarios")
     suspend fun getAll(): List<Usuario>
+
+    @Query("DELETE FROM usuarios WHERE id = :id")
+    suspend fun deleteById(id: Int)
+
+    @Query("UPDATE usuarios SET rut = :rut, usuario = :usuario, correo = :correo, pass = :pass WHERE id = :id")
+    suspend fun updateById(id: Int, rut: String, usuario: String, correo: String, pass: String)
 }

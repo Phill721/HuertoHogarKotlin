@@ -139,9 +139,5 @@ fun AppNavigation(sessionViewModel: SessionViewModel) { // 👈 se recibe acá
         composable("admin/ventas") {
             VentasAdminScreen(navController = navController)
         }
-
-        composable("admin/documentos") {
-            DocumentosAdminScreen(navController = navController)
-        }
     }
 }
