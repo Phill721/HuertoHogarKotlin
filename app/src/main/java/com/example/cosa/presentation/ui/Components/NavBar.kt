@@ -64,6 +64,12 @@ fun HuertoNavbar(
                     scope.launch { drawerState.close() }
                 }
 
+                // NUEVO: acceso directo al panel admin
+                DrawerButton("Admin") {
+                    navController?.navigate("admin")
+                    scope.launch { drawerState.close() }
+                }
+
                 // 🔥 Solo cambia esta parte según la sesión
                 if (isLoggedIn) {
                     DrawerButton("Perfil") {

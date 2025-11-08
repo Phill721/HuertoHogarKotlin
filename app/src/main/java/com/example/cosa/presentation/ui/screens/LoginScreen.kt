@@ -90,9 +90,16 @@ fun LoginScreen(navController: NavController, sessionViewModel: SessionViewModel
                                 if (exito) {
                                     // ✅ Guardar sesión en DataStore
                                     sessionViewModel.saveSession(context, correo)
-                                    // ✅ Navegar al home
-                                    navController.navigate("home") {
-                                        popUpTo("login") { inclusive = true } // evita volver atrás
+                                    // Si el correo pertenece al dominio de profesores, navegar al panel admin
+                                    if (correo.trim().lowercase().endsWith("@profesor.duoc.cl")) {
+                                        navController.navigate("admin") {
+                                            popUpTo("login") { inclusive = true }
+                                        }
+                                    } else {
+                                        // ✅ Navegar al home para usuarios normales
+                                        navController.navigate("home") {
+                                            popUpTo("login") { inclusive = true } // evita volver atrás
+                                        }
                                     }
                                 }
                             }

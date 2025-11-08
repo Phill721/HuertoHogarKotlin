@@ -16,4 +16,6 @@ interface UsuarioDAO {
     @Query("SELECT * FROM usuarios WHERE usuario = :usuario LIMIT 1")
     suspend fun getUsuarioPorNombre(usuario: String): Usuario?
 
+    @Query("SELECT * FROM usuarios")
+    suspend fun getAll(): List<Usuario>
 }
