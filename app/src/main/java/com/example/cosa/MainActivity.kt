@@ -170,5 +170,22 @@ fun AppNavigation(sessionViewModel: SessionViewModel, cartViewModel: CartViewMod
                 cartViewModel = cartViewModel
             )
         }
+
+        // ADMIN ROUTES (sin guardias por dominio)
+        composable("admin") {
+            AdminMainScreen(navController = navController, sessionViewModel = sessionViewModel)
+        }
+
+        composable("admin/usuarios") {
+            UsuariosAdminScreen(navController = navController)
+        }
+
+        composable("admin/productos") {
+            ProductosAdminScreen(navController = navController)
+        }
+
+        composable("admin/ventas") {
+            VentasAdminScreen(navController = navController)
+        }
     }
 }

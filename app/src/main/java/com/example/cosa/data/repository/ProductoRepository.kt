@@ -41,4 +41,25 @@ class ProductoRepository {
         delay(300)
         return productos.filter { it.categoria == categoria }
     }
+    // Nuevo: agregar producto (genera id sencillo)
+    suspend fun agregarProducto(producto: Producto) {
+        delay(100)
+        // generar id único simple
+        val nuevoId = "p${System.currentTimeMillis()}"
+        val p = producto.copy(id = nuevoId)
+        productos.add(p)
+    }
+
+    suspend fun actualizarProducto(producto: Producto) {
+        delay(100)
+        val idx = productos.indexOfFirst { it.id == producto.id }
+        if (idx >= 0) {
+            productos[idx] = producto
+        }
+    }
+
+    suspend fun eliminarProducto(id: String) {
+        delay(100)
+        productos.removeAll { it.id == id }
+    }
 }

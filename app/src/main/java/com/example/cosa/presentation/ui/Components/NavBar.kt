@@ -22,16 +22,19 @@ import kotlinx.coroutines.launch
 fun HuertoNavbar(
     navController: NavController? = null,
     sessionViewModel: SessionViewModel,
-    cartViewModel: CartViewModel, // 👈 agregado
+    cartViewModel: CartViewModel,
     content: @Composable (PaddingValues) -> Unit
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val isLoggedIn by sessionViewModel.isLoggedIn.collectAsState(initial = false)
+    val currentUser by sessionViewModel.currentUser.collectAsState(initial = null)
 
-    // 👇 Estado del modal del carrito
     var showCart by remember { mutableStateOf(false) }
     val itemCount by cartViewModel.itemCount.collectAsState()
+
+    // 🔥 Determinar si es admin por correo
+    val isAdmin = currentUser?.correo?.endsWith("@profesor.duoc.cl") == true
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -68,6 +71,14 @@ fun HuertoNavbar(
                     scope.launch { drawerState.close() }
                 }
 
+                // ✅ Solo mostrar si el usuario es admin
+                if (isAdmin) {
+                    DrawerButton("Admin") {
+                        navController?.navigate("admin")
+                        scope.launch { drawerState.close() }
+                    }
+                }
+
                 // 🔥 Control de sesión
                 if (isLoggedIn) {
                     DrawerButton("Perfil") {
@@ -92,7 +103,6 @@ fun HuertoNavbar(
                     }
                 }
 
-                // 🛒 Botón del carrito en el drawer
                 DrawerButton("Carrito 🛒") {
                     showCart = true
                     scope.launch { drawerState.close() }
@@ -133,7 +143,6 @@ fun HuertoNavbar(
                         }
                     },
                     actions = {
-                        // 🛍 Ícono del carrito con badge
                         IconButton(onClick = { showCart = true }) {
                             BadgedBox(
                                 badge = {
@@ -159,7 +168,6 @@ fun HuertoNavbar(
             }
         )
 
-        // 🛒 Modal del carrito (usa el tuyo, sin cambios)
         if (showCart) {
             CartModal(
                 cartViewModel = cartViewModel,
