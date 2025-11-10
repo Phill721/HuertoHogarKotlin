@@ -266,11 +266,7 @@ fun ProductDetailScreen(
                             }
                         }
 
-                        item {
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Text("Reviews", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                            Text("Aquí puedes agregar la sección de reseñas (ReviewSection).")
-                        }
+                        
                     }
                 }
             }
